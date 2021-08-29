@@ -1,6 +1,6 @@
 - id: shellcheck
-  name: ShellCheck v0.4.7
+  name: ShellCheck v0.5.0
   description: Static analysis tool for shell scripts
   language: docker_image
-  entry: koalaman/shellcheck:v0.4.7
+  entry: koalaman/shellcheck:v0.5.0
   types: [shell]
