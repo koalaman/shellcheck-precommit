@@ -1,0 +1,6 @@
+- id: shellcheck
+  name: ShellCheck $VERSION
+  description: Static analysis tool for shell scripts
+  language: docker_image
+  entry: $DOCKERHUB:$VERSION
+  types: [shell]

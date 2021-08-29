@@ -1,0 +1,78 @@
+#!/bin/bash
+# This script automatically creates commits and tags for each Docker version
+export DOCKERHUB="koalaman/shellcheck"
+commit_message="ShellCheck \$VERSION"
+
+
+info() {
+  # shellcheck disable=SC2059
+  printf >&2 "$1\\n" "${@:2}"
+}
+
+die() {
+  info "$@"
+  exit 1
+}
+
+should_regenerate=0
+
+for arg
+do
+  case "$arg" in
+    --regenerate-all) should_regenerate=1 ;;
+    *) 
+      die "Unknown option: %s" "$arg"
+      exit 1
+      ;;
+  esac
+done
+
+has_tag() {
+  git rev-parse "$1" > /dev/null 2>&1
+}
+
+make_tag() {
+  if has_tag "$VERSION"
+  then
+    if (( should_regenerate ))
+    then
+      info "Deleting existing tag %s, but leaving commit alone." "$VERSION"
+      git tag -d "$VERSION" || die "Failed to delete tag"
+    else
+      info "Skipping existing tag %s" "$VERSION"
+      return 0
+    fi
+  fi
+
+   envsubst < "pre-commit-hooks.yaml.template" > ".pre-commit-hooks.yaml" ||
+       die "Failed to fill in hook template"
+
+   envsubst < "README.md.template" > "README.md" ||
+       die "Failed to fill in README template"
+   
+   git commit -a -m "$(envsubst <<< "$commit_message")" ||
+       die "Failed to commit"
+
+   git tag "$VERSION" ||
+       die "Failed to tag"
+}
+
+fetch_tags() {
+  curl "https://registry.hub.docker.com/v2/repositories/$DOCKERHUB/tags" |
+    jq -r '.results[].name' | 
+    grep '^v' |
+    sort -V
+}
+
+
+while read -r version
+do
+  export VERSION=$version
+  make_tag
+done < <(fetch_tags)
+
+
+latest=$(git describe FETCH_HEAD --tags --abbrev=0) ||
+    die "git describe failed"
+
+info "Done: the latest version is %s" "$latest"
