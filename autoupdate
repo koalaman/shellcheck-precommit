@@ -1,5 +1,6 @@
 #!/bin/bash
 # This script automatically creates commits and tags for each Docker version
+export DOCKERHOST="docker.io"
 export DOCKERHUB="koalaman/shellcheck"
 commit_message="ShellCheck \$VERSION"
 

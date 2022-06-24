@@ -2,5 +2,5 @@
   name: ShellCheck $VERSION
   description: Static analysis tool for shell scripts
   language: docker_image
-  entry: $DOCKERHUB:$VERSION
+  entry: $DOCKERHOST/$DOCKERHUB:$VERSION
   types: [shell]
