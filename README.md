@@ -9,7 +9,7 @@ Activate by adding it to your `.pre-commit-config.yaml`:
 ```sh
 repos:
 -   repo: https://github.com/koalaman/shellcheck-precommit
-    rev: v0.8.0
+    rev: v0.9.0
     hooks:
     -   id: shellcheck
 #       args: ["--severity=warning"]  # Optionally only show errors and warnings
