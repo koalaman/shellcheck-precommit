@@ -13,11 +13,11 @@ repos:
     hooks:
     -   id: shellcheck
 #       args: ["--severity=warning"]  # Optionally only show errors and warnings
+    -   id: shellcheck-system         # Using system installed shellcheck
 ```
 
 #### Why a separate repo?
 
 This repo keeps the pre-commit hook out of the critical path of ShellCheck
 releases, reducing the number of things that can go wrong. This in turn helps
-ensure a smoother `pre-commit autoupdate`. 
-
+ensure a smoother `pre-commit autoupdate`.
